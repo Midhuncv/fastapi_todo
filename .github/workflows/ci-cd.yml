@@ -38,8 +38,8 @@ jobs:
 
       - name: Tag image
         run: |
-          docker tag fastapi_todo ghcr.io/${{ github.actor }}/fastapi_todo:latest
+          docker tag fastapi_todo ghcr.io/${{ github.actor,, }}/fastapi_todo:latest
 
       - name: Push image
         run: |
-          docker push ghcr.io/${{ github.actor }}/fastapi_todo:latest
+          docker push ghcr.io/${{ github.actor,, }}/fastapi_todo:latest
