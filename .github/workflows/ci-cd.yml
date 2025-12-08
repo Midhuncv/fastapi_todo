@@ -1,47 +1,45 @@
-name : CI/CD for Fast todoapp
+name: CI/CD for FastAPI Todo App
 
 on:
   push:
-    branches:["main"]
+    branches: ["main"]
+
 jobs:
   build:
-    runs-on:ubuntu-latest
-    
-    setps:
-    -name:Checkout Repo
-    uses:action/checkout@v3
+    runs-on: ubuntu-latest
 
-    -name:Set up python
-    uses:actions/setup-python@v4
-    with:
-      python-version:"3.10"
-    -name:Install dependencies
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
 
-    run:|
-      pip install -r requirements.txt
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
 
-    -name:Run tests
-    run :|
-        echo "No tests yet!"
-    
-    -name:Build Docker Image
-    run:|
-      docker build -t fastapi_todo .
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
 
-    
-    -name:Log in to Github Container Registry
-    uses:docker/login-action@v3
-    with:
-        registry":ghr.io
-        username:${{ github.actor }}
-        password:${{ secrets.GITHUB_TOKEN  }}
-    
-    -name:Tag image
-    run : |
-      docker tag fastapi_todo ghcr.io/${{  github.actor }}/fastapi_todo:latest
-    -name:Push image
-    run:|
-        docker push ghcr.io/${{ github.actor }}/fastapi_todo:latest
+      - name: Run tests
+        run: |
+          echo "No tests yet!"
 
-    
-    
+      - name: Build Docker Image
+        run: |
+          docker build -t fastapi_todo .
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Tag image
+        run: |
+          docker tag fastapi_todo ghcr.io/${{ github.actor }}/fastapi_todo:latest
+
+      - name: Push image
+        run: |
+          docker push ghcr.io/${{ github.actor }}/fastapi_todo:latest
