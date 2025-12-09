@@ -1,3 +1,9 @@
+name: CI/CD for FastAPI Todo
+
+permissions:
+  contents: write
+  packages: write
+
 on:
   push:
     branches: ["main"]
@@ -19,10 +25,6 @@ jobs:
         run: |
           pip install -r requirements.txt
 
-      - name: Run tests
-        run: |
-          echo "No tests yet!"
-
       - name: Build Docker Image
         run: |
           docker build -t fastapi_todo .
@@ -34,14 +36,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Convert username to lowercase
-        id: username
-        run: echo "lowercase=$(echo '${{ github.actor }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_OUTPUT
-
-      - name: Tag image
+      - name: Tag Image
         run: |
-          docker tag fastapi_todo ghcr.io/${{ steps.username.outputs.lowercase }}/fastapi_todo:latest
+          docker tag fastapi_todo ghcr.io/${{ github.actor }}/fastapi-todo-fastapi:latest
 
-      - name: Push image
+      - name: Push Image
         run: |
-          docker push ghcr.io/${{ steps.username.outputs.lowercase }}/fastapi_todo:latest
+          docker push ghcr.io/${{ github.actor }}/fastapi-todo-fastapi:latest
